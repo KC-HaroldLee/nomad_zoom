@@ -1,6 +1,6 @@
 const socket = io();
 const welcome = document.querySelector("#welcome");
-const form = welcome.querySelector("form");
+const roomForm = welcome.querySelector("form");
 
 const room = document.querySelector("#room")
 room.hidden = true;
@@ -38,7 +38,7 @@ function showRoom(){
 
 function handleRoomSubmit(e){
     e.preventDefault();
-    const input = form.querySelector("input");
+    const input = roomForm.querySelector("input");
     // emit({신호}, {데이터}, {서버에서 호출하는 펑션} ... 뭐든 다 보내진다.)
     socket.emit("enter_room",input.value, showRoom);
     roomName = input.value;
@@ -52,16 +52,33 @@ function addMessage(msg){
     ul.appendChild(li);
 }
 
-form.addEventListener("submit", handleRoomSubmit);
+roomForm.addEventListener("submit", handleRoomSubmit);
 
 
-socket.on("welcome", (user) => {
+socket.on("welcome", (user, newCount) => {
+    const h3 = room.querySelector("h3");
+    h3.innerText = `Room ${roomName} (${newCount})`
     addMessage(`${user} joined`)
 })
 
-socket.on("bye", (user) => {
+socket.on("bye", (user, newCount) => {
+    const h3 = room.querySelector("h3");
+    h3.innerText = `Room ${roomName} (${newCount})`
     addMessage(`${user} left!`)
 })
 
 socket.on("new_message", addMessage);
 // socket.on("new_message", (msg) => addMessage(msg));
+
+socket.on("room_change", (rooms) =>{
+    const roomList = welcome.querySelector("ul");
+    if(rooms.length === 0){
+        roomList.innerHTML = "";
+        return;
+    }
+    rooms.forEach(room => {
+        const li = document.createElement("li");
+        li.innerText = room;
+        roomList.appendChild(li);
+    })
+});

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        function kill(){
+            const ul = document.querySelector("ul");
+            console.log(ul);
+            ul.innerHTML ="";
+        }
+
+        const btn = document.querySelector("#btn");
+        
+    </script>
+</head>
+<body>
+    <ul>
+    </ul>
+    <li>
+        123
+    </li>
+    <li>
+        345
+    </li>
+
+    <button id ="btn" onclick="kill()">
+        kill
+    </button>
+</body>
+</html>
